@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="student-management-system" />
+        <module name="Student-Management-JAX-RS" />
       </profile>
     </annotationProcessing>
   </component>
