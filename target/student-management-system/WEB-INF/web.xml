@@ -4,7 +4,7 @@
     <data-source>
         <name>java:app/MyApp/MyDS</name>
         <class-name>org.h2.jdbcx.JdbcDataSource</class-name>
-        <url>jdbc:h2:mem:s-m-s</url>
+        <url>jdbc:h2:mem:test</url>
         <user>sa</user>
         <password>sa</password>
     </data-source>

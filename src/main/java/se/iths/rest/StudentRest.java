@@ -16,12 +16,17 @@ import java.util.regex.Pattern;
 
 public class StudentRest {
 
-    @Inject
     StudentService studentService;
+
+    @Inject
+    public StudentRest(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
 
     @Path("")
     @POST
-    public Response createStudent(Student newStudent) {
+    public Response addStudent(Student newStudent) {
 
         if(incompleteStudent(newStudent)) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student info is incomplete").type(MediaType.TEXT_PLAIN_TYPE).build());
@@ -89,14 +94,25 @@ public class StudentRest {
         return Response.ok(updateStudentPhoneNumber).build();
         }
 
+
     @Path("{id}")
     @DELETE
     public Response removeStudent(@PathParam("id") Long id) {
+
         String removedStudentMessage = "Removed student with id: " + id;
 
         notFoundError(id);
         studentService.removeStudent(id);
         return Response.ok(removedStudentMessage).type(MediaType.TEXT_PLAIN_TYPE).build();
+    }
+
+    @Path("addsubjects/{id}")
+    @PATCH
+    public Response addSubject(@PathParam("id")Long id, @QueryParam("title")String title) {
+        Student addSubject;
+       addSubject = studentService.addSubject(id, title);
+
+       return Response.ok(addSubject).build();
     }
 
     private void notFoundError(Long id) {

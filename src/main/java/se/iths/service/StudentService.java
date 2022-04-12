@@ -1,6 +1,7 @@
 package se.iths.service;
 
 import se.iths.entity.Student;
+import se.iths.entity.Subject;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +27,15 @@ public class StudentService {
     }
 
     public void removeStudent(Long id) {
-        entityManager.remove(findStudentById(id));
+        Student foundStudent = findStudentById(id);
+
+        for(Subject subject : foundStudent.getSubjects()) {
+            subject.removeStudent(foundStudent);
+        }
+
+        // TODO Här ska vi kalla på en metod som tar bort studenten från hashsetet
+        // i Subject klassen
+        entityManager.remove(foundStudent);
     }
 
     public Student findStudentById(Long id) {
@@ -43,5 +52,16 @@ public class StudentService {
 
         foundStudent.setPhoneNumber(phoneNumber);
         return foundStudent;
+    }
+
+    public Student addSubject(Long id, String title) {
+        Student foundStudent = findStudentById(id);
+
+        Subject foundSubject = (Subject) entityManager.createQuery
+                        ("SELECT s from Subject s where s.title = :title")
+                        .setParameter("title", title).getSingleResult();
+        foundStudent.addSubject(foundSubject);
+        return foundStudent;
+
     }
 }
