@@ -28,6 +28,19 @@ public class SubjectService {
         entityManager.remove(foundSubject);
     }
 
+    public Student removeStudent(Long id, String email) {
+        Subject subject = findSubjectById(id);
+        Student student = (Student) entityManager.createQuery("SELECT s from Student s where s.email = :email")
+                .setParameter("email", email).getSingleResult();
+        subject.removeStudent(student);
+        return student;
+    }
+
+    public void removeTeacher(Long id) {
+        Subject subject = findSubjectById(id);
+        subject.setTeacher(null);
+    }
+
     public Subject findSubjectById(Long id) {
         return entityManager.find(Subject.class, id);
     }

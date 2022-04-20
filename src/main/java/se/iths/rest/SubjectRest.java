@@ -1,10 +1,12 @@
 package se.iths.rest;
 
+import se.iths.entity.Student;
 import se.iths.entity.Subject;
 import se.iths.service.SubjectService;
 import se.iths.util.JsonResponse;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.transaction.TransactionalException;
 import javax.validation.ValidationException;
 import javax.ws.rs.*;
@@ -69,6 +71,28 @@ public class SubjectRest {
         }
         return Response.ok(changeSubjectName).build();
     }
+
+    @Path("removestudent/{id}")
+    @DELETE
+    public Response removeStudentFromSubject(@PathParam("id")Long id, @QueryParam("email") String email) {
+        notFoundError(id);
+        try {
+            Student student = subjectService.removeStudent(id, email);
+        } catch (NoResultException n) {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity(new JsonResponse(404, "Not Found", "There is no student with the email: " + email)).build());
+        }
+        return Response.ok().entity(new JsonResponse(200, "OK", "Student successuflly removed from subject with id: " + id)).build();
+    }
+
+    @Path("removeteacher/{id}")
+    @DELETE
+    public Response removeTeacherFromSubject(@PathParam("id")Long id) {
+        notFoundError(id);
+        subjectService.removeTeacher(id);
+        return Response.ok().entity(new JsonResponse(200, "OK", "Teacher successfully removed from subject with id: " + id)).build();
+    }
+
 
     @Path("{id}")
     @DELETE
