@@ -13,16 +13,18 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Size(min = 2)
+    @Column(unique = true)
     private String title;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "subjects", cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "subjects",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id"))
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
     Set<Student> students = new HashSet<>();
 
     @ManyToOne
+    @JoinColumn(name = "teacher")
     private Teacher teacher;
 
 
@@ -64,25 +66,9 @@ public class Subject {
     public void addStudent(Student student) {
         students.add(student);
     }
-    //
-//
+
     public void removeStudent(Student student) {
         students.remove(student);
     }
 
-    //    @ManyToOne
-//    private Student student;
-
-
-    //    public void setUser(Student student) {
-//        this.student = student;
-//    }
-//    @JsonbTransient
-//    public Student getStudent() {
-//        return student;
-//    }
-//
-//    public void setStudent(Student student) {
-//        this.student = student;
-//    }
 }

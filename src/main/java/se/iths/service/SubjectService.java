@@ -1,5 +1,6 @@
 package se.iths.service;
 
+import se.iths.entity.Student;
 import se.iths.entity.Subject;
 
 import javax.persistence.EntityManager;
@@ -13,13 +14,18 @@ public class SubjectService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public Subject addSubject(Subject subject) {
-
-        // Adding subject
-//        subject.addStudent(new Student("Johnny", "Olsen", "Johnnyolsen90@gmail.com", "0724490403"));
-
+    public void addSubject(Subject subject) {
         entityManager.persist(subject);
-        return subject;
+    }
+
+    public void removeSubject(Long id) {
+        Subject foundSubject = findSubjectById(id);
+
+        for (Student student : foundSubject.getStudents()) {
+            student.removeSubject(foundSubject);
+        }
+        foundSubject.getTeacher().removeSubject(foundSubject);
+        entityManager.remove(foundSubject);
     }
 
     public Subject findSubjectById(Long id) {
@@ -27,7 +33,12 @@ public class SubjectService {
     }
 
     public List<Subject> getAllSubjects() {
-       return entityManager.createQuery("SELECT s from Subject s", Subject.class).getResultList();
+        return entityManager.createQuery("SELECT s from Subject s", Subject.class).getResultList();
     }
 
+    public Subject updateSubject(Long id, String title) {
+        Subject changeSubjectName = findSubjectById(id);
+        changeSubjectName.setTitle(title);
+        return changeSubjectName;
+    }
 }

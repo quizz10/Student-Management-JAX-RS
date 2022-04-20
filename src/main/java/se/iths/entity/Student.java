@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-
 public class Student {
 
     @Id
@@ -25,7 +24,7 @@ public class Student {
     private String phoneNumber;
 
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany
     Set<Subject> subjects = new HashSet<>();
 
     public Student(String firstName, String lastName, String email, String phoneNumber) {
@@ -50,7 +49,6 @@ public class Student {
 
     public void removeSubject(Subject subject) {
         subjects.remove(subject);
-        subject.removeStudent(this);
     }
 
     public Long getId() {
@@ -93,21 +91,3 @@ public class Student {
         this.phoneNumber = phoneNumber;
     }
 }
-
-
-//    @OneToMany(mappedBy = "student", cascade = CascadeType.PERSIST, orphanRemoval = true)
-//    private List<Subject> subjects = new ArrayList<>();
-
-//    public void addSubject(Subject subject) {
-//        subjects.add(subject);
-//        subject.setUser(this);
-//    }
-
-//    @JsonbTransient
-//    public List<Subject> getSubjects() {
-//        return subjects;
-//    }
-
-//    public void setSubjects(List<Subject> subjects) {
-//        this.subjects = subjects;
-//    }

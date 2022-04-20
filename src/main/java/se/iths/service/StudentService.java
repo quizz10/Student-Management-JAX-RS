@@ -23,18 +23,16 @@ public class StudentService {
     }
 
     public List<Student> getAllStudents() {
-       return entityManager.createQuery("SELECT s from Student s", Student.class).getResultList();
+        return entityManager.createQuery("SELECT s from Student s", Student.class).getResultList();
     }
 
     public void removeStudent(Long id) {
         Student foundStudent = findStudentById(id);
 
-        for(Subject subject : foundStudent.getSubjects()) {
+        for (Subject subject : foundStudent.getSubjects()) {
             subject.removeStudent(foundStudent);
         }
 
-        // TODO Här ska vi kalla på en metod som tar bort studenten från hashsetet
-        // i Subject klassen
         entityManager.remove(foundStudent);
     }
 
@@ -59,9 +57,8 @@ public class StudentService {
 
         Subject foundSubject = (Subject) entityManager.createQuery
                         ("SELECT s from Subject s where s.title = :title")
-                        .setParameter("title", title).getSingleResult();
+                .setParameter("title", title).getSingleResult();
         foundStudent.addSubject(foundSubject);
         return foundStudent;
-
     }
 }

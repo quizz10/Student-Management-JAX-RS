@@ -2,6 +2,7 @@ package se.iths.entity;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,17 +12,14 @@ public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @Column(name="TEACHER_ID")
     private Long id;
+    @NotEmpty
     @Size(min = 2)
     private String firstName;
+    @NotEmpty
     @Size(min = 2)
     private String lastName;
-
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "teacher")
     private List<Subject> subjects = new ArrayList<>();
 
     public Teacher(String firstName, String lastName) {
@@ -56,6 +54,7 @@ public class Teacher {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     @JsonbTransient
     public List<Subject> getSubjects() {
         return subjects;
@@ -64,5 +63,9 @@ public class Teacher {
     public void addSubject(Subject subject) {
         subjects.add(subject);
         subject.setTeacher(this);
+    }
+
+    public void removeSubject(Subject subject) {
+        subjects.remove(subject);
     }
 }
